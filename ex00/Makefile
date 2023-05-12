@@ -28,7 +28,7 @@ re: fclean
 	make all
 
 test:	$(NAME)
-		./$(NAME) data.csv
+		./$(NAME) tofind
 
 vtest:	$(NAME)
 		valgrind --leak-check=full ./$(NAME)
