@@ -34,40 +34,11 @@ void	compareWithFile(char *fileName, std::map<std::string, std::string> &bitcoin
 		std::cout << "Invalid comparision file, aborting." << std::endl;
 }
 
-int	checkDate(std::string date)
-{
-	std::cout << "Atoi: " << atoi(date.c_str()) << std::endl;
-	return (0);
-}
-
-void	compareDatabases(std::map<std::string, std::string> &bitcoinDatabase, std::map<std::string, std::string> &comparisonDatabase)
-{
-	for (std::map<std::string, std::string>::iterator it = comparisonDatabase.begin();
-			it != comparisonDatabase.end(); it++)
-	{
-		if (checkDate(it->first) == 0)
-		{
-			std::map<std::string, std::string>::iterator found;
-			found = bitcoinDatabase.find(it->first);
-			if (found != bitcoinDatabase.end())
-				std::cout << "On " << it->first << " " << it->second << " was worth " << found->second << " dollars." << std::endl;
-			else
-			{
-				found = bitcoinDatabase.lower_bound(it->first);
-				std::cout << "On " << found->first << " closest date to " << it->first << " stored in database " << it->second << " was worth " << found->second << " dollars." << std::endl;
-			}
-		}
-		else
-			std::cout << it->first << " is not a valid date." << std::endl;
-	}
-}
-
 int	main(int argc, char **argv)
 {
 	std::map<std::string, std::string> bitcoinDatabase;
 	std::map<std::string, std::string> comparisonDatabase;
 
-	(void)argv;
 	if (argc != 2)
 	{
 		std::cout << "Please provide database file" << std::endl;
@@ -77,8 +48,8 @@ int	main(int argc, char **argv)
 	try
 	{
 		Database bitcoin("data.csv");
-		//storeDatabase(argv[1], comparisonDatabase, '|');
-		compareDatabases(bitcoinDatabase, comparisonDatabase);
+		Database toCompare(argv[1]);
+		bitcoin.compare(toCompare);
 	}
 	catch (std::exception &e)
 	{

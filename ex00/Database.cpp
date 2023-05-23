@@ -40,7 +40,7 @@ Database::Database(std::string fileName)
 			dateFirst = 1;
 			std::cout << "database is date first" << std::endl;
 		}
-		else if (strncmp("date", buffer2, 4) != 0 || strncmp(" date", buffer2, 5) != 0)
+		else if (strncmp("date", buffer2, 4) == 0 || strncmp(" date", buffer2, 5) == 0)
 			std::cout << "database is date second" << std::endl;
 		else
 			throw Database::InvalidDatabaseException();
@@ -54,7 +54,7 @@ Database::Database(std::string fileName)
 				inputFile >> year >> div1 >> month >> div2 >> day >> div3 >> value;
 			else
 				inputFile >> value >> div3 >> year >> div1 >> month >> div2 >> day;
-			if (dateIsCorrect(year, month, day) && div1 == '-' && div2 == div1 && div3 == ',')
+			if (dateIsCorrect(year, month, day) && div1 == '-' && div2 == div1)
 			{
 				date = (year << 9) | (month << 5) | day;
 					this->_storage.insert(std::make_pair(date, value));
@@ -98,3 +98,30 @@ int	Database::dateIsCorrect(int year, int month, int day)
 		return (0);
 	return (1);
 }
+
+void	Database::compare(Database &toCompare)
+{
+	for (std::map<int, float>::iterator focus = toCompare._storage.begin();
+			focus != toCompare._storage.end(); focus++)
+	{
+		if (focus->second > 0 && focus->second < 1000)
+		{
+			std::map<int, float>::iterator found = this->_storage.lower_bound(focus->first);
+			if (found->first != focus->first && found != this->_storage.begin())
+				found--;
+			std::cout << "Value on " << (focus->first >> 9) << "/" <<
+			std::setw(2) << std::setfill('0') << ((focus->first >> 5) & 0b1111) << "/" <<
+			std::setw(2) << std::setfill('0') << (focus->first & 0b11111);
+			std::cout << " for " << focus->second << " btc was " << std::fixed << std::setprecision(2) << focus->second * found->second << " euros." << std::endl;
+
+		}
+	}
+}
+
+
+
+
+
+
+
+

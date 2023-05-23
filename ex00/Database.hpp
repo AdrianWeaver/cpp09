@@ -6,6 +6,7 @@
 #include <exception>
 #include <cstring>
 #include <iostream>
+#include <iomanip>
 #include <fstream>
 
 class Database
@@ -14,6 +15,7 @@ class Database
 		~Database();
 		Database(std::string fileName);
 
+		void	compare(Database &toCompare);
 		/* Exceptions */
 		class InvalidDatabaseException : public std::exception
 		{
