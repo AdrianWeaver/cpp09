@@ -5,7 +5,8 @@ CXX = c++
 CXXFLAGS	= -Wall -Wextra -Werror -std=c++98 -g3
 CPPFLAGS	= -MMD
 
-SRCS		=	main.cpp
+SRCS		=	main.cpp\
+				Database.cpp
 
 
 OBJS = $(SRCS:.cpp=.o)

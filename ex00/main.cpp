@@ -4,62 +4,11 @@
 #include <cstring>
 #include <string>
 #include <algorithm>
+#include "Database.hpp"
 
 #define DATABASE_FILE "data.csv"
 #define DEBUG_DATABASE 1
 #define DEBUG_SHOW_DATABASE 1
-
-int	storeDatabase(std::string fileName, std::map<std::string, std::string> &databaseToFill, char separator)
-{
-	std::ifstream inputFile(fileName.c_str());
-	if (inputFile)
-	{
-		char	buffer1[256];
-		char	buffer2[256];
-		int		dateFirst = 0;
-
-		inputFile.getline(buffer1, 256, separator);
-		inputFile.getline(buffer2, 256);
-#if DEBUG_DATABASE
-		std::cout << "first line, first word: " << buffer1 << std::endl;
-		std::cout << "first line, second word: " << buffer2 << std::endl;
-#endif
-		if (strncmp("date", buffer1, 4) == 0)
-		{
-			dateFirst = 1;
-			std::cout << "database is date first" << std::endl;
-		}
-		else if (strncmp("date", buffer2, 4) != 0 || strncmp(" date", buffer2, 5) != 0)
-		{
-			std::cout << "database is date second" << std::endl;
-			return (1);
-		}
-		while (inputFile.getline(buffer1, 256, ','))
-		{
-			inputFile.getline(buffer2, 256);
-			if (dateFirst)
-			{
-				databaseToFill.insert(std::make_pair(buffer1, buffer2));
-				std::cout << "filling database as date first" << std::endl;
-			}
-			else
-			{
-				databaseToFill.insert(std::make_pair(buffer2, buffer1));
-				std::cout << "filling database as date second" << std::endl;
-			}
-		}
-#if DEBUG_SHOW_DATABASE
-		for (std::map<std::string, std::string>::iterator it = databaseToFill.begin();
-				it != databaseToFill.end(); it++)
-			std::cout << "Database_key: " << it->first << " database_value: " << it->second << std::endl;
-#endif
-	}
-	else
-	{
-		std::cout << "Invalid database file" << std::endl;
-	}
-	return (0);
-}
 
 void	compareWithFile(char *fileName, std::map<std::string, std::string> &bitcoinDatabase)
 {
@@ -118,17 +67,22 @@ int	main(int argc, char **argv)
 	std::map<std::string, std::string> bitcoinDatabase;
 	std::map<std::string, std::string> comparisonDatabase;
 
+	(void)argv;
 	if (argc != 2)
 	{
 		std::cout << "Please provide database file" << std::endl;
 		return (0);
 	}
-	if (storeDatabase("data.csv", bitcoinDatabase, ','))
+
+	try
 	{
-		std::cerr << "Error in database" << std::endl;
-		return (0);
+		Database bitcoin("data.csv");
+		//storeDatabase(argv[1], comparisonDatabase, '|');
+		compareDatabases(bitcoinDatabase, comparisonDatabase);
 	}
-	storeDatabase(argv[1], comparisonDatabase, '|');
-	compareDatabases(bitcoinDatabase, comparisonDatabase);
+	catch (std::exception &e)
+	{
+		std::cout << e.what() << std::endl;
+	}
 	return (0);
 }
