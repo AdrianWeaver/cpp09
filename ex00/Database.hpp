@@ -15,6 +15,7 @@ class Database
 		~Database();
 		Database(std::string fileName);
 
+		void	compareFile(std::string fileName);
 		void	compare(Database &toCompare);
 		/* Exceptions */
 		class InvalidDatabaseException : public std::exception

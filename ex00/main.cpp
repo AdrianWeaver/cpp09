@@ -48,8 +48,7 @@ int	main(int argc, char **argv)
 	try
 	{
 		Database bitcoin("data.csv");
-		Database toCompare(argv[1]);
-		bitcoin.compare(toCompare);
+		bitcoin.compareFile(argv[1]);
 	}
 	catch (std::exception &e)
 	{

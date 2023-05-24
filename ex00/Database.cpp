@@ -118,6 +118,59 @@ void	Database::compare(Database &toCompare)
 	}
 }
 
+void	Database::compareFile(std::string fileName)
+{
+	std::ifstream inputFile(fileName.c_str());
+	if (inputFile)
+	{
+		std::string	buffer;
+
+		getline(inputFile, buffer);
+		if (buffer != "date | value")
+			throw Database::InvalidDatabaseException();
+		while (inputFile)
+		{
+			int year = 0, month = 0, day = 0;
+			int date = 0;
+			char div1 = 0, div2 = 0, div3 = 0;
+			float value = 0;
+			inputFile >> year >> div1 >> month >> div2 >> day >> div3 >> value;
+			std::cout << "year:" << year << std::endl
+				<< "div1:" << div1 << std::endl
+				<< "month:" << month << std::endl
+				<< "div2:" << div2 << std::endl
+				<< "day:" << day << std::endl
+				<< "div3:" << div3 << std::endl
+				<< "value:" << value << std::endl;
+			if (value == 0)
+			{
+				inputFile.ignore(256, '\n');
+				std::cout << "entered here " << std::endl;
+			}
+			if (dateIsCorrect(year, month, day) && div1 == '-' && div2 == div1)
+			{
+				if (value > 0 && value <= 1000)
+				{
+					date = (year << 9) | (month << 5) | day;
+					std::map<int, float>::iterator found;
+					found = this->_storage.lower_bound(date);
+					if (found->first != date && found != this->_storage.begin())
+						found--;
+					std::cout << "Value on " << (date >> 9) << "/" <<
+						std::setw(2) << std::setfill('0') << ((date >> 5) & 0b1111) << "/" <<
+						std::setw(2) << std::setfill('0') << (date & 0b11111);
+					std::cout << " for " << found->second << " btc was " << std::fixed << std::setprecision(2) << value * found->second << " euros." << std::endl;
+				}
+				else
+					std::cout << "Error invalid value given" << std::endl;
+			}
+			else
+				std::cout << "Error: invalid date" << std::endl;
+		}
+	}
+	else
+		throw Database::InvalidFileException();
+}
 
 
 
