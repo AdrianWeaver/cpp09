@@ -128,7 +128,7 @@ void	Database::compareFile(std::string fileName)
 		getline(inputFile, buffer);
 		if (buffer != "date | value")
 			throw Database::InvalidDatabaseException();
-		while (inputFile)
+		while (!inputFile.eof())
 		{
 			int year = 0, month = 0, day = 0;
 			int date = 0;
@@ -142,14 +142,20 @@ void	Database::compareFile(std::string fileName)
 				<< "day:" << day << std::endl
 				<< "div3:" << div3 << std::endl
 				<< "value:" << value << std::endl;
-			if (value == 0)
-			{
-				inputFile.ignore(256, '\n');
-				std::cout << "entered here " << std::endl;
-			}
 			if (dateIsCorrect(year, month, day) && div1 == '-' && div2 == div1)
 			{
-				if (value > 0 && value <= 1000)
+				if (value < 0)
+					std::cerr << "Error: not a positive number" << std::endl;
+				if (inputFile.fail())
+				{
+					inputFile.clear();
+					std::cout << "entered here fail bit" << std::endl;
+					std::string wesh;
+					getline(inputFile, wesh);
+
+					std::cout << "[" << wesh << "]" << std::endl;;
+				}
+				else if (value > 0 && value <= 1000)
 				{
 					date = (year << 9) | (month << 5) | day;
 					std::map<int, float>::iterator found;
@@ -159,7 +165,7 @@ void	Database::compareFile(std::string fileName)
 					std::cout << "Value on " << (date >> 9) << "/" <<
 						std::setw(2) << std::setfill('0') << ((date >> 5) & 0b1111) << "/" <<
 						std::setw(2) << std::setfill('0') << (date & 0b11111);
-					std::cout << " for " << found->second << " btc was " << std::fixed << std::setprecision(2) << value * found->second << " euros." << std::endl;
+					std::cout << " for " << value << " btc was " << std::fixed << std::setprecision(2) << value * found->second << " euros." << std::endl;
 				}
 				else
 					std::cout << "Error invalid value given" << std::endl;
@@ -167,6 +173,7 @@ void	Database::compareFile(std::string fileName)
 			else
 				std::cout << "Error: invalid date" << std::endl;
 		}
+		std::cout << "error in the file" << std::endl;
 	}
 	else
 		throw Database::InvalidFileException();
