@@ -33,6 +33,7 @@ test:	$(NAME)
 		./$(NAME) "7 7 * 7 -"
 		./$(NAME) "1 2 * 2 / 2 * 2 4 - +"
 		./$(NAME) "(1 + 1)"
+		./$(NAME) "8 0 /"
 
 vtest:	$(NAME)
 		valgrind --leak-check=full ./$(NAME)
