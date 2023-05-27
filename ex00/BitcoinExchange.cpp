@@ -99,17 +99,19 @@ const char *BitcoinExchange::InvalidFileException::what() const throw()
 int	BitcoinExchange::dateIsCorrect(int year, int month, int day)
 {
 	int leapYear = 0;
-	if (year % 400 == 0 || ((year % 4) == 0 && (year % 100) != 0))
-		leapYear = 1;
 	if (year < 2004 || year > 2024)
 		return (0);
+	if (year % 400 == 0 || ((year % 4) == 0 && (year % 100) != 0))
+		leapYear = 1;
 	if (month < 1 || month > 12)
 		return (0);
 	if (day > 31 || day < 1)
 		return (0);
 	if (leapYear && month == 2 && day <= 29)
 		return (1);
-	if (month % 2 == 0 && day >= 31)
+	if (!leapYear && month == 2 && day > 28)
+		return (0);
+	if (month % 2 == 0 && day > 30)
 		return (0);
 	return (1);
 }
