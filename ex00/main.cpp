@@ -4,7 +4,7 @@
 #include <cstring>
 #include <string>
 #include <algorithm>
-#include "Database.hpp"
+#include "BitcoinExchange.hpp"
 
 #define DATABASE_FILE "data.csv"
 #define DEBUG_DATABASE 0
@@ -47,7 +47,7 @@ int	main(int argc, char **argv)
 
 	try
 	{
-		Database bitcoin("data.csv");
+		BitcoinExchange bitcoin("data.csv");
 		bitcoin.compareFile(argv[1]);
 	}
 	catch (std::exception &e)

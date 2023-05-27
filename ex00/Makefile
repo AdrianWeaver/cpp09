@@ -6,7 +6,7 @@ CXXFLAGS	= -Wall -Wextra -Werror -std=c++98 -g3
 CPPFLAGS	= -MMD
 
 SRCS		=	main.cpp\
-				Database.cpp
+				BitcoinExchange.cpp
 
 
 OBJS = $(SRCS:.cpp=.o)

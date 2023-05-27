@@ -1,5 +1,5 @@
-#ifndef DATABASE_HPP
-# define DATABASE_HPP
+#ifndef BITCOINEXCHANGE_HPP
+# define BITCOINEXCHANGE_HPP
 
 #include <string>
 #include <map>
@@ -9,14 +9,14 @@
 #include <iomanip>
 #include <fstream>
 
-class Database
+class BitcoinExchange
 {
 	public:
-		~Database();
-		Database(std::string fileName);
+		~BitcoinExchange();
+		BitcoinExchange(std::string fileName);
 
 		void	compareFile(std::string fileName);
-		void	compare(Database &toCompare);
+		void	compare(BitcoinExchange &toCompare);
 
 		void	printExactValue(int date, float value, float btcRate);
 		void	printApproxValue(int realDate, int closestDate, float value, float btcRate);
@@ -32,9 +32,9 @@ class Database
 				const char *what() const throw();
 		};
 		private:
-		Database();
-		Database(const Database &source);
-		Database &operator=(const Database &rhs);
+		BitcoinExchange();
+		BitcoinExchange(const BitcoinExchange &source);
+		BitcoinExchange &operator=(const BitcoinExchange &rhs);
 
 		int	dateIsCorrect(int year, int month, int day);
 	protected:

@@ -1,25 +1,25 @@
-#include "Database.hpp"
+#include "BitcoinExchange.hpp"
 
-Database::Database()
+BitcoinExchange::BitcoinExchange()
 {
 }
 
-Database::~Database()
+BitcoinExchange::~BitcoinExchange()
 {
 }
 
-Database::Database(const Database &source)
+BitcoinExchange::BitcoinExchange(const BitcoinExchange &source)
 {
 	*this = source;
 }
 
-Database &Database::operator=(const Database &rhs)
+BitcoinExchange &BitcoinExchange::operator=(const BitcoinExchange &rhs)
 {
 	(void)rhs;
 	return (*this);
 }
 
-Database::Database(std::string fileName)
+BitcoinExchange::BitcoinExchange(std::string fileName)
 {
 	std::ifstream inputFile(fileName.c_str());
 	if (inputFile)
@@ -36,7 +36,7 @@ Database::Database(std::string fileName)
 		else if (strncmp("date", buffer2, 4) == 0 || strncmp(" date", buffer2, 5) == 0)
 			dateFirst = 0;
 		else
-			throw Database::InvalidDatabaseException();
+			throw BitcoinExchange::InvalidDatabaseException();
 		while (inputFile)
 		{
 			int year = 0, month = 0, day = 0;
@@ -62,10 +62,10 @@ Database::Database(std::string fileName)
 #endif
 	}
 	else
-		throw Database::InvalidFileException();
+		throw BitcoinExchange::InvalidFileException();
 }
 
-void	Database::printExactValue(int date, float value, float btcRate)
+void	BitcoinExchange::printExactValue(int date, float value, float btcRate)
 {
 	std::cout << "[" << (date >> 9) << "/"
 		<< std::setw(2) << std::setfill('0') << ((date >> 5) & 0b1111)
@@ -74,7 +74,7 @@ void	Database::printExactValue(int date, float value, float btcRate)
 		<< std::fixed << std::setprecision(2) << value * btcRate << " euros." << std::endl;
 }
 
-void	Database::printApproxValue(int realDate, int closestDate, float value, float btcRate)
+void	BitcoinExchange::printApproxValue(int realDate, int closestDate, float value, float btcRate)
 {
 	std::cout << "No ref for [" << (realDate >> 9) << "/"
 		<< std::setw(2) << std::setfill('0') << ((realDate >> 5) & 0b1111)
@@ -87,16 +87,16 @@ void	Database::printApproxValue(int realDate, int closestDate, float value, floa
 		<< std::fixed << std::setprecision(2) << value * btcRate << " euros." << std::endl;
 }
 
-const char *Database::InvalidDatabaseException::what() const throw()
+const char *BitcoinExchange::InvalidDatabaseException::what() const throw()
 {
 	return ("Database format is invalid\n");
 }
-const char *Database::InvalidFileException::what() const throw()
+const char *BitcoinExchange::InvalidFileException::what() const throw()
 {
 	return ("Invalid file\n");
 }
 
-int	Database::dateIsCorrect(int year, int month, int day)
+int	BitcoinExchange::dateIsCorrect(int year, int month, int day)
 {
 	int leapYear = 0;
 	if (year % 400 == 0 || ((year % 4) == 0 && (year % 100) != 0))
@@ -114,7 +114,7 @@ int	Database::dateIsCorrect(int year, int month, int day)
 	return (1);
 }
 
-void	Database::compare(Database &toCompare)
+void	BitcoinExchange::compare(BitcoinExchange &toCompare)
 {
 	for (std::map<int, float>::iterator focus = toCompare._storage.begin();
 			focus != toCompare._storage.end(); focus++)
@@ -133,7 +133,7 @@ void	Database::compare(Database &toCompare)
 	}
 }
 
-void	Database::compareFile(std::string fileName)
+void	BitcoinExchange::compareFile(std::string fileName)
 {
 	std::ifstream inputFile(fileName.c_str());
 	if (inputFile)
@@ -142,7 +142,7 @@ void	Database::compareFile(std::string fileName)
 
 		getline(inputFile, buffer);
 		if (buffer != "date | value")
-			throw Database::InvalidDatabaseException();
+			throw BitcoinExchange::InvalidDatabaseException();
 		while (!inputFile.eof())
 		{
 			int year = 0, month = 0, day = 0;
@@ -185,7 +185,7 @@ void	Database::compareFile(std::string fileName)
 		}
 	}
 	else
-		throw Database::InvalidFileException();
+		throw BitcoinExchange::InvalidFileException();
 }
 
 
