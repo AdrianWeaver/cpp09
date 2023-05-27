@@ -7,8 +7,8 @@
 #include "Database.hpp"
 
 #define DATABASE_FILE "data.csv"
-#define DEBUG_DATABASE 1
-#define DEBUG_SHOW_DATABASE 1
+#define DEBUG_DATABASE 0
+#define DEBUG_SHOW_DATABASE 0
 
 void	compareWithFile(char *fileName, std::map<std::string, std::string> &bitcoinDatabase)
 {

@@ -31,17 +31,10 @@ Database::Database(std::string fileName)
 
 		inputFile.getline(buffer1, 256, ',');
 		inputFile.getline(buffer2, 256);
-#if DEBUG_DATABASE
-		std::cout << "first line, first word: " << buffer1 << std::endl;
-		std::cout << "first line, second word: " << buffer2 << std::endl;
-#endif
 		if (strncmp("date", buffer1, 4) == 0)
-		{
 			dateFirst = 1;
-			std::cout << "database is date first" << std::endl;
-		}
 		else if (strncmp("date", buffer2, 4) == 0 || strncmp(" date", buffer2, 5) == 0)
-			std::cout << "database is date second" << std::endl;
+			dateFirst = 0;
 		else
 			throw Database::InvalidDatabaseException();
 		while (inputFile)
@@ -60,16 +53,38 @@ Database::Database(std::string fileName)
 					this->_storage.insert(std::make_pair(date, value));
 			}
 		}
-//#if DEBUG_SHOW_DATABASE
+#if DEBUG_SHOW_DATABASE
 		for (std::map<int, float>::iterator it = this->_storage.begin();
 				it != this->_storage.end(); it++)
 			std::cout << "Database_key: " << (it->first >> 9) << "/" <<
 				((it->first >> 5) & 0b1111) << "/" <<
 				(it->first & 0b11111) << " database_value: " << it->second << std::endl;
-//#endif
+#endif
 	}
 	else
 		throw Database::InvalidFileException();
+}
+
+void	Database::printExactValue(int date, float value, float btcRate)
+{
+	std::cout << "[" << (date >> 9) << "/"
+		<< std::setw(2) << std::setfill('0') << ((date >> 5) & 0b1111)
+		<< "/" << std::setw(2) << std::setfill('0') << (date & 0b11111) << "] ";
+		std::cout << value << " btc == "
+		<< std::fixed << std::setprecision(2) << value * btcRate << " euros." << std::endl;
+}
+
+void	Database::printApproxValue(int realDate, int closestDate, float value, float btcRate)
+{
+	std::cout << "No ref for [" << (realDate >> 9) << "/"
+		<< std::setw(2) << std::setfill('0') << ((realDate >> 5) & 0b1111)
+		<< "/" << std::setw(2) << std::setfill('0') << (realDate & 0b11111);
+		std::cout << "] defaulting to [" << (closestDate>> 9) << "/"
+		<< std::setw(2) << std::setfill('0') << ((closestDate>> 5) & 0b1111)
+		<< "/" << std::setw(2) << std::setfill('0') << (closestDate & 0b11111) << "] ";
+
+		std::cout << value << " btc == "
+		<< std::fixed << std::setprecision(2) << value * btcRate << " euros." << std::endl;
 }
 
 const char *Database::InvalidDatabaseException::what() const throw()
@@ -135,45 +150,39 @@ void	Database::compareFile(std::string fileName)
 			char div1 = 0, div2 = 0, div3 = 0;
 			float value = 0;
 			inputFile >> year >> div1 >> month >> div2 >> day >> div3 >> value;
-			std::cout << "year:" << year << std::endl
-				<< "div1:" << div1 << std::endl
-				<< "month:" << month << std::endl
-				<< "div2:" << div2 << std::endl
-				<< "day:" << day << std::endl
-				<< "div3:" << div3 << std::endl
-				<< "value:" << value << std::endl;
 			if (dateIsCorrect(year, month, day) && div1 == '-' && div2 == div1)
 			{
 				if (value < 0)
-					std::cerr << "Error: not a positive number" << std::endl;
+					std::cerr << "Error: not a positive number." << std::endl;
+				if (value > 1000)
+					std::cerr << "Error: value is too high." << std::endl;
 				if (inputFile.fail())
 				{
 					inputFile.clear();
-					std::cout << "entered here fail bit" << std::endl;
 					std::string wesh;
 					getline(inputFile, wesh);
-
-					std::cout << "[" << wesh << "]" << std::endl;;
+					std::cerr << "Error: \"" << wesh << "\" is not an acceptable value." << std::endl;
 				}
 				else if (value > 0 && value <= 1000)
 				{
+					int approx = 0;
 					date = (year << 9) | (month << 5) | day;
 					std::map<int, float>::iterator found;
 					found = this->_storage.lower_bound(date);
 					if (found->first != date && found != this->_storage.begin())
+					{
+						approx = 1;
 						found--;
-					std::cout << "Value on " << (date >> 9) << "/" <<
-						std::setw(2) << std::setfill('0') << ((date >> 5) & 0b1111) << "/" <<
-						std::setw(2) << std::setfill('0') << (date & 0b11111);
-					std::cout << " for " << value << " btc was " << std::fixed << std::setprecision(2) << value * found->second << " euros." << std::endl;
+					}
+					if (approx)
+						this->printApproxValue(date, found->first, value, found->second);
+					else
+						this->printExactValue(date, value, found->second);
 				}
-				else
-					std::cout << "Error invalid value given" << std::endl;
 			}
-			else
-				std::cout << "Error: invalid date" << std::endl;
+			else if (inputFile.good())
+				std::cout << "Error: invalid date." << std::endl;
 		}
-		std::cout << "error in the file" << std::endl;
 	}
 	else
 		throw Database::InvalidFileException();

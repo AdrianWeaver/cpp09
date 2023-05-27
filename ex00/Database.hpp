@@ -17,6 +17,9 @@ class Database
 
 		void	compareFile(std::string fileName);
 		void	compare(Database &toCompare);
+
+		void	printExactValue(int date, float value, float btcRate);
+		void	printApproxValue(int realDate, int closestDate, float value, float btcRate);
 		/* Exceptions */
 		class InvalidDatabaseException : public std::exception
 		{
