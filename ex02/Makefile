@@ -32,7 +32,6 @@ test:	$(NAME)
 		./$(NAME) 3 5 9 7 4
 		./$(NAME) `shuf -i 1-100000 -n 3000 | tr "\n" " "`
 		./$(NAME) "-1" "2"
-		./$(NAME) `jot -r 3000 1 100000 | tr '\n' ' '`
 
 vtest:	$(NAME)
 		valgrind --leak-check=full ./$(NAME)
