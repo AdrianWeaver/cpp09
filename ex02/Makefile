@@ -30,6 +30,7 @@ re: fclean
 
 test:	$(NAME)
 		./$(NAME) 3 5 9 7 4
+		./$(NAME) 3 5 9 7 4 2
 		./$(NAME) `shuf -i 1-100000 -n 3000 | tr "\n" " "`
 		./$(NAME) "-1" "2"
 

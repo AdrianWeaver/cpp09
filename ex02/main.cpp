@@ -1,5 +1,19 @@
 #include "PmergeMe.hpp"
 
+#include <algorithm>
+#include <list>
+#include <vector>
+
+#include <iostream>
+#include <vector>
+#include <list>
+#include <algorithm>
+
+#include <iostream>
+#include <vector>
+#include <list>
+#include <algorithm>
+
 int main(int argc, char **argv)
 {
 	if (argc == 1)
@@ -9,9 +23,17 @@ int main(int argc, char **argv)
 	}
 	try
 	{
+		std::cout << "argc = " << argc << std::endl;
 		PmergeMe	sorted(argc, argv);
+		//sorted.printVectorStorage();
 		sorted.updateTimer();
-		std::cout << "Timer at the end: " << sorted.getTimer() << std::endl;
+		sorted.sort();
+		if (sorted.isVectorStorageSorted())
+			std::cout << "Vector is sorted" << std::endl;
+		else
+			std::cout << "VECTOR IS NOT SORTED" << std::endl;
+
+		//sorted.printVectorStorage();
 	}
 	catch (std::exception &e)
 	{
