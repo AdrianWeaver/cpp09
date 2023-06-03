@@ -14,28 +14,28 @@ RPN::RPN(char* phrase)
 	{
 		if (isdigit(phrase[i]))
 		{
-			this->_storage.push(phrase[i] - '0');
+			this->_storage.push_front(phrase[i] - '0');
 			continue;
 		}
 		else if (phrase[i] == '+' || phrase[i] == '-'
 				|| phrase[i] == '/'|| phrase[i] == '*')
 		{
-			int tmp = this->_storage.top();
-			this->_storage.pop();
+			int tmp = this->_storage.front();
+			this->_storage.pop_front();
 			if (phrase[i] == '+')
-				this->_storage.top() += (tmp);
+				this->_storage.front() += (tmp);
 			if (phrase[i] == '-')
-				this->_storage.top() -= (tmp);
+				this->_storage.front() -= (tmp);
 			if (phrase[i] == '/')
 			{
 				if (tmp == 0)
 					throw RPN::DivideByZeroException();
 				else
-					this->_storage.top() /= (tmp);
+					this->_storage.front() /= (tmp);
 			}
 			if (phrase[i] == '*')
 			{
-				this->_storage.top() *= (tmp);
+				this->_storage.front() *= (tmp);
 			}
 		}
 		else if (!isspace(phrase[i]))
@@ -56,7 +56,7 @@ RPN &RPN::operator=(const RPN &rhs)
 
 int	RPN::getTopValue()
 {
-	return (this->_storage.top());
+	return (this->_storage.front());
 }
 
 const char*RPN::WrongInputException::what() const throw()

@@ -1,7 +1,7 @@
 #ifndef RPN_HPP
 # define RPN_HPP
 
-# include <stack>
+# include <list>
 # include <cctype>
 # include <exception>
 # include <iostream>
@@ -31,7 +31,7 @@ class RPN
 	private:
 		RPN();
 	protected:
-		std::stack<int> _storage;
+		std::list<int> _storage;
 };
 
 #endif
