@@ -27,12 +27,12 @@ PmergeMe::PmergeMe(int argc, char **argv)
 	for (int i = 1; i < argc; i++)
 		this->_vectorStorage.push_back(atoi(argv[i]));
 	this->updateTimer();
-	std::cout << "Time to store data (vector): " << this->getTimer() << "ms" << std::endl;
+	this->_timerStoreVector = this->getTimer();
 	gettimeofday(&(this->_start), NULL);
 	for (int i = 1; i < argc; i++)
 		this->_dequeStorage.push_back(atoi(argv[i]));
 	this->updateTimer();
-	std::cout << "Time to store data (deque): " << this->getTimer() << "ms" << std::endl;
+	this->_timerStoreDeque = this->getTimer();
 }
 
 int PmergeMe::CheckArgs(int argc, char **argv)
@@ -227,11 +227,26 @@ void	PmergeMe::sort()
 	gettimeofday(&(this->_start), NULL);
 	this->fordJohnson(this->_vectorStorage, 0, this->_vectorStorage.size() - 1);
 	this->updateTimer();
-	std::cout << "Time to sort data (vector): " << this->getTimer() << "ms." << std::endl;
+	this->_timerSortVector = this->getTimer();
 	gettimeofday(&(this->_start), NULL);
 	this->fordJohnson(this->_dequeStorage, 0, this->_vectorStorage.size() - 1);
 	this->updateTimer();
-	std::cout << "Time to sort data (deque): " << this->getTimer() << "ms." << std::endl;
+	this->_timerSortDeque = this->getTimer();
 }
 
-
+void	PmergeMe::printTimers() const
+{
+	std::cout << std::setprecision(4) << std::fixed;
+	std::cout << "Time to process a range of " << this->_vectorStorage.size()
+		<< " elements with std::vector<int> to store data: " << this->_timerStoreVector
+		<< "ms." << std::endl;
+	std::cout << "Time to process a range of " << this->_vectorStorage.size()
+		<< " elements with std::deque<int> to store data: " << this->_timerStoreDeque
+		<< "ms." << std::endl;
+	std::cout << "Time to process a range of " << this->_vectorStorage.size()
+		<< " elements with std::vector<int> to sort data: " << this->_timerSortVector
+		<< "ms." << std::endl;
+	std::cout << "Time to process a range of " << this->_vectorStorage.size()
+		<< " elements with std::deque<int> to sort data: " << this->_timerSortDeque
+		<< "ms." << std::endl;
+}

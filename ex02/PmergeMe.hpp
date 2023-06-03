@@ -13,7 +13,10 @@
 # define VECTOR_TIMER 0
 # define LIST_TIMER 1
 
-
+# define TIMERSTOREVECTOR 0
+# define TIMERSTOREDEQUE 1
+# define TIMERSORTVECTOR 2
+# define TIMERSORTDEQUE 3
 class PmergeMe
 {
 	public:
@@ -28,10 +31,8 @@ class PmergeMe
 		/* getters */
 		int	getVectorStorageSize() const;
 
-		/* timer methods */
-		void	updateTimer();
-		double	getTimer() const;
-		void	printTimer() const;
+		/* prints */
+		void	printTimers() const;
 
 		/* sorting methods */
 		void	sort();
@@ -51,14 +52,23 @@ class PmergeMe
 		{
 			const char *what() const throw();
 		};
+	protected:
 	private:
 		PmergeMe();
-	protected:
+
+
 		std::vector<int> _vectorStorage;
 		std::deque<int> _dequeStorage;
 
+		/* timer methods */
+		void	updateTimer();
+		double	getTimer() const;
 		struct timeval _start;
 		struct timeval _timer;
+		double	_timerStoreVector;
+		double	_timerStoreDeque;
+		double	_timerSortVector;
+		double	_timerSortDeque;
 };
 
 #endif

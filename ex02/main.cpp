@@ -14,6 +14,8 @@
 #include <list>
 #include <algorithm>
 
+#define EVALUATION_HELPER 0
+
 int main(int argc, char **argv)
 {
 	if (argc == 1)
@@ -23,17 +25,20 @@ int main(int argc, char **argv)
 	}
 	try
 	{
-		std::cout << "argc = " << argc << std::endl;
 		PmergeMe	sorted(argc, argv);
-		//sorted.printVectorStorage();
-		sorted.updateTimer();
+		std::cout << "Before: ";
+		sorted.printVectorStorage();
 		sorted.sort();
+		std::cout << "After: ";
+		sorted.printVectorStorage();
+		sorted.printTimers();
+#if EVALUATION_HELPER
 		if (sorted.isVectorStorageSorted())
 			std::cout << "Vector is sorted" << std::endl;
 		else
 			std::cout << "VECTOR IS NOT SORTED" << std::endl;
+#endif
 
-		//sorted.printVectorStorage();
 	}
 	catch (std::exception &e)
 	{
